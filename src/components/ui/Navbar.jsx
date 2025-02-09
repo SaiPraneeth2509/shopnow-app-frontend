@@ -3,16 +3,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 
-const Navbar = () => {
+const Navbar = ({ cartCount }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm py-3">
-      {" "}
-      {/* Increase padding with py-3 */}
       <div className="container-fluid">
         <Link to="/" className="navbar-brand fs-3">
-          {" "}
-          {/* Increase brand font size */}
-          ShopperShop
+          ShopNow
         </Link>
         <button
           className="navbar-toggler"
@@ -27,31 +23,30 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+            {/* Login Link */}
             <li className="nav-item mx-3">
-              {" "}
-              {/* Add margin between links */}
               <Link to="/login" className="nav-link fs-5">
-                {" "}
-                {/* Increase link font size */}
                 Login
               </Link>
             </li>
+            {/* Register Link */}
             <li className="nav-item mx-3">
-              {" "}
-              {/* Add margin between links */}
               <Link to="/register" className="nav-link fs-5">
-                {" "}
-                {/* Increase link font size */}
                 Register
               </Link>
             </li>
+            {/* Cart Link */}
             <li className="nav-item mx-3">
-              {" "}
-              {/* Add margin between links */}
-              <Link to="/cart" className="nav-link fs-5">
-                {" "}
-                {/* Increase link font size */}
-                <FaShoppingCart size={24} /> {/* Increase cart icon size */}
+              <Link to="/cart" className="nav-link fs-5 position-relative">
+                <FaShoppingCart size={24} />
+                {cartCount > 0 && (
+                  <span
+                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style={{ fontSize: "0.75rem" }}
+                  >
+                    {cartCount}
+                  </span>
+                )}
               </Link>
             </li>
           </ul>

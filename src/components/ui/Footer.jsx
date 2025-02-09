@@ -70,8 +70,7 @@ const Footer = () => {
           </div>
           <div className="col-12 text-center">
             <p className="mb-0">
-              &copy; {new Date().getFullYear()} ShopperShop. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} ShopNow. All rights reserved.
             </p>
           </div>
         </div>

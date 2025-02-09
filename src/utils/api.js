@@ -1,4 +1,3 @@
 // src/utils/api.js
-const BASE_URL = "http://127.0.0.1:8001"; // Replace with your Django backend URL
-
+const BASE_URL = "http://127.0.0.1:8001";
 export default BASE_URL;
