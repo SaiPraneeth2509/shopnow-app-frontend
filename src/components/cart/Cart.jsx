@@ -9,6 +9,7 @@ const Cart = ({ updateCartCount }) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Fetch cart items from the backend
   const fetchCartItems = async () => {
     const cartCode = localStorage.getItem("cart_code");
     if (!cartCode) {
@@ -32,13 +33,102 @@ const Cart = ({ updateCartCount }) => {
     }
   };
 
+  // Update quantity of a product in the cart
+  const updateQuantity = async (productId, quantity) => {
+    const cartCode = localStorage.getItem("cart_code");
+    if (!cartCode) {
+      alert("No cart found.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BASE_URL}/update_quantity/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cart_code: cartCode,
+          product_id: productId,
+          quantity: quantity,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update quantity");
+      }
+
+      const data = await response.json();
+      console.log("Quantity updated:", data);
+      fetchCartItems(); // Refresh cart items
+      if (updateCartCount) {
+        updateCartCount(); // Update cart count in Navbar
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      alert("Failed to update quantity. Please try again.");
+    }
+  };
+
+  // Remove a product from the cart
+  const removeFromCart = async (productId) => {
+    const cartCode = localStorage.getItem("cart_code");
+    if (!cartCode) {
+      alert("No cart found.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BASE_URL}/remove_item/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cart_code: cartCode,
+          product_id: productId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to remove item from cart");
+      }
+
+      const data = await response.json();
+      console.log("Item removed:", data);
+      fetchCartItems(); // Refresh cart items
+      if (updateCartCount) {
+        updateCartCount(); // Update cart count in Navbar
+      }
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+      alert("Failed to remove item from cart. Please try again.");
+    }
+  };
+
+  // Handle checkout
   const handleCheckout = () => {
     navigate("/checkout");
   };
 
+  // Fetch cart items when the component mounts
   useEffect(() => {
     fetchCartItems();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-center text-danger my-5">{error}</div>;
+  }
 
   return (
     <div className="container my-5">
