@@ -1,7 +1,6 @@
-// src/components/home/HomeCard.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import BASE_URL from "../../utils/api";
+import api from "../../utils/api"; // Use the Axios instance
 import generateCartCode from "../../utils/generate_cart_code";
 
 const HomeCard = ({ product, updateCartCount }) => {
@@ -16,14 +15,10 @@ const HomeCard = ({ product, updateCartCount }) => {
 
   const checkProductInCart = async () => {
     try {
-      const response = await fetch(
-        `${BASE_URL}/product_in_cart/?cart_code=${cartCode}&product_id=${product.id}`
+      const response = await api.get(
+        `/product_in_cart/?cart_code=${cartCode}&product_id=${product.id}`
       );
-      if (!response.ok) {
-        throw new Error("Failed to check if product is in cart");
-      }
-      const data = await response.json();
-      setIsInCart(data.product_in_cart);
+      setIsInCart(response.data.product_in_cart);
     } catch (error) {
       console.error("Error checking product in cart:", error);
     }
@@ -32,23 +27,10 @@ const HomeCard = ({ product, updateCartCount }) => {
   const addToCart = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${BASE_URL}/add_item/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cart_code: cartCode,
-          product_id: product.id,
-        }),
+      const response = await api.post("/add_item/", {
+        cart_code: cartCode,
+        product_id: product.id,
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to add item to cart");
-      }
-
-      const data = await response.json();
-      console.log("Item added to cart:", data);
 
       if (updateCartCount) {
         await updateCartCount();
@@ -70,12 +52,13 @@ const HomeCard = ({ product, updateCartCount }) => {
     <Link to={`/product/${product.slug}`} className="text-decoration-none">
       <div className="card h-100 shadow-sm">
         <img
-          src={`${BASE_URL}${product.image}`}
+          src={`${api.defaults.baseURL}${product.image}`} // Use api.defaults.baseURL
           alt={product.name}
           className="card-img-top"
           style={{ height: "200px", objectFit: "cover" }}
           onError={(e) => {
-            e.target.src = "https://via.placeholder.com/200";
+            e.target.src = "/images/placeholder.png"; // Local fallback
+            e.target.onerror = null; // Prevent infinite loop
           }}
         />
         <div className="card-body">

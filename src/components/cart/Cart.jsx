@@ -1,7 +1,6 @@
-// src/components/cart/Cart.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BASE_URL from "../../utils/api";
+import api from "../../utils/api";
 
 const Cart = ({ updateCartCount }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -19,12 +18,8 @@ const Cart = ({ updateCartCount }) => {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/cart/?cart_code=${cartCode}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch cart items");
-      }
-      const data = await response.json();
-      setCartItems(data.items || []);
+      const response = await api.get(`/cart/?cart_code=${cartCode}`);
+      setCartItems(response.data.items || []);
     } catch (error) {
       console.error("Error fetching cart items:", error);
       setError(error.message);
@@ -42,24 +37,12 @@ const Cart = ({ updateCartCount }) => {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/update_quantity/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cart_code: cartCode,
-          product_id: productId,
-          quantity: quantity,
-        }),
+      const response = await api.post("/update_quantity/", {
+        cart_code: cartCode,
+        product_id: productId,
+        quantity: quantity,
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to update quantity");
-      }
-
-      const data = await response.json();
-      console.log("Quantity updated:", data);
+      console.log("Quantity updated:", response.data);
       fetchCartItems(); // Refresh cart items
       if (updateCartCount) {
         updateCartCount(); // Update cart count in Navbar
@@ -79,23 +62,11 @@ const Cart = ({ updateCartCount }) => {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/remove_item/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cart_code: cartCode,
-          product_id: productId,
-        }),
+      const response = await api.post("/remove_item/", {
+        cart_code: cartCode,
+        product_id: productId,
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to remove item from cart");
-      }
-
-      const data = await response.json();
-      console.log("Item removed:", data);
+      console.log("Item removed:", response.data);
       fetchCartItems(); // Refresh cart items
       if (updateCartCount) {
         updateCartCount(); // Update cart count in Navbar
@@ -141,7 +112,7 @@ const Cart = ({ updateCartCount }) => {
                 <div className="row g-0">
                   <div className="col-md-3">
                     <img
-                      src={`${BASE_URL}${item.product.image}`}
+                      src={`${api.defaults.baseURL}${item.product.image}`}
                       alt={item.product.name}
                       className="img-fluid rounded-start"
                       style={{
@@ -150,7 +121,9 @@ const Cart = ({ updateCartCount }) => {
                         objectFit: "cover",
                       }}
                       onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/100";
+                        // Fallback to a local or reliable external image
+                        e.target.src = "/images/placeholder.png"; // Local fallback
+                        e.target.onerror = null; // Prevent infinite loop if fallback also fails
                       }}
                     />
                   </div>

@@ -1,7 +1,6 @@
-// src/components/checkout/Checkout.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BASE_URL from "../../utils/api";
+import api from "../../utils/api"; // Use the Axios instance
 
 const Checkout = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -18,12 +17,8 @@ const Checkout = () => {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/cart/?cart_code=${cartCode}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch cart items");
-      }
-      const data = await response.json();
-      setCartItems(data.items || []);
+      const response = await api.get(`/cart/?cart_code=${cartCode}`);
+      setCartItems(response.data.items || []);
     } catch (error) {
       console.error("Error fetching cart items:", error);
       setError(error.message);

@@ -1,21 +1,15 @@
-// src/components/home/CardContainer.jsx
 import React, { useEffect, useState } from "react";
 import HomeCard from "./HomeCard";
-import BASE_URL from "../../utils/api";
+import api from "../../utils/api"; // Use the Axios instance
 
 const CardContainer = ({ updateCartCount }) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/products/`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        return response.json();
-      })
-      .then((data) => setProducts(data))
+    api
+      .get("/products/")
+      .then((response) => setProducts(response.data))
       .catch((error) => {
         console.error("Error fetching products:", error);
         setError(error.message);

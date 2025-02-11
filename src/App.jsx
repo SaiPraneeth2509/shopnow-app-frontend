@@ -1,14 +1,12 @@
-// src/App.js
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
 import Home from "./components/home/Home";
 import NotFound from "./components/ui/NotFound";
 import ProductDetails from "./components/product/ProductDetails";
 import Cart from "./components/cart/Cart";
-import { useState, useEffect } from "react";
 import Checkout from "./components/checkout/Checkout";
-import BASE_URL from "./utils/api";
+import api from "./utils/api"; // Use the Axios instance
 
 function App() {
   const [cartCount, setCartCount] = useState(0);
@@ -17,17 +15,14 @@ function App() {
     const cartCode = localStorage.getItem("cart_code");
     if (cartCode) {
       try {
-        const response = await fetch(`${BASE_URL}/cart/?cart_code=${cartCode}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch cart count");
-        }
-        const data = await response.json();
-        setCartCount(data.total_items || 0);
+        const response = await api.get(`/cart/?cart_code=${cartCode}`);
+        setCartCount(response.data.total_items || 0);
       } catch (error) {
         console.error("Error fetching cart count:", error);
       }
     }
   };
+
   useEffect(() => {
     updateCartCount();
   }, []);

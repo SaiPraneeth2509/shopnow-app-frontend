@@ -1,7 +1,6 @@
-// src/components/product/ProductDetails.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import BASE_URL from "../../utils/api.js";
+import api from "../../utils/api"; // Use the Axios instance
 import Error from "../ui/Error.jsx";
 import HomeCard from "../home/HomeCard.jsx";
 
@@ -12,27 +11,20 @@ const ProductDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  console.log("Slug from URL:", slug);
-
   useEffect(() => {
-    console.log("Fetching product details for slug:", slug);
-    fetch(`${BASE_URL}/products/${slug}/`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch product details");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Product Data:", data);
-        setProduct(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
+    const fetchProductDetails = async () => {
+      try {
+        const response = await api.get(`/products/${slug}/`);
+        setProduct(response.data);
+      } catch (error) {
         console.error("Error fetching product details:", error);
         setError(error.message);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+
+    fetchProductDetails();
   }, [slug]);
 
   if (error) {
@@ -53,7 +45,7 @@ const ProductDetails = () => {
     return <div>No product found.</div>;
   }
 
-  const imageUrl = `${BASE_URL}${product.image}`;
+  const imageUrl = `${api.defaults.baseURL}${product.image}`;
 
   return (
     <div className="container my-5">
