@@ -81,7 +81,11 @@ const HomeCard = ({ product, updateCartCount }) => {
             }}
             disabled={isLoading || isInCart}
           >
-            {isLoading ? "Adding..." : isInCart ? "In Cart" : "Add to Cart"}
+            {isLoading
+              ? "Adding..."
+              : isInCart
+              ? "Added to cart"
+              : "Add to Cart"}
           </button>
         </div>
       </div>

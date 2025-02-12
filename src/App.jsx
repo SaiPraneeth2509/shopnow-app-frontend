@@ -6,7 +6,11 @@ import NotFound from "./components/ui/NotFound";
 import ProductDetails from "./components/product/ProductDetails";
 import Cart from "./components/cart/Cart";
 import Checkout from "./components/checkout/Checkout";
-import api from "./utils/api"; // Use the Axios instance
+import Login from "./components/auth/Login";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import Register from "./components/auth/Register";
+import api from "./utils/api";
+import { AuthProvider } from "./components/context/AuthContext";
 
 function App() {
   const [cartCount, setCartCount] = useState(0);
@@ -28,20 +32,25 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <MainLayout cartCount={cartCount} updateCartCount={updateCartCount}>
-        <Routes>
-          <Route
-            path="/"
-            element={<Home updateCartCount={updateCartCount} />}
-          />
-          <Route path="product/:slug" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </MainLayout>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <MainLayout cartCount={cartCount} updateCartCount={updateCartCount}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/"
+              element={<Home updateCartCount={updateCartCount} />}
+            />
+            <Route path="product/:slug" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </MainLayout>
+      </Router>
+    </AuthProvider>
   );
 }
 

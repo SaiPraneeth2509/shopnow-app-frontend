@@ -1,11 +1,11 @@
-// src/ui/ProtectedRoutes.jsx
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import jwtDecode from "jwt-decode"; // Import jwtDecode
 
 const ProtectedRoutes = () => {
   // Check if the user is authenticated
   const isAuthenticated = () => {
-    const accessToken = localStorage.getItem("access");
+    const accessToken = localStorage.getItem("access_token"); // Use "access_token" instead of "access"
     if (!accessToken) return false;
 
     // Decode the token to check its expiry
