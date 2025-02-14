@@ -51,7 +51,9 @@ const Navbar = ({ cartCount }) => {
             {isAuthenticated ? (
               <>
                 <li className="nav-item mx-3">
-                  <span className="nav-link fs-5">Hi, {username}</span>
+                  <Link to="/profile" className="nav-link fs-5">
+                    Hi, {username}
+                  </Link>
                 </li>
                 <li className="nav-item mx-3">
                   <button

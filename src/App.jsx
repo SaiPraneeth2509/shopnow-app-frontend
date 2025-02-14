@@ -9,6 +9,7 @@ import Checkout from "./components/checkout/Checkout";
 import Login from "./components/auth/Login";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import Register from "./components/auth/Register";
+import Profile from "./components/profile/Profile";
 import api from "./utils/api";
 import { AuthProvider } from "./components/context/AuthContext";
 
@@ -39,6 +40,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/profile" element={<Profile />} />
             <Route
               path="/"
               element={<Home updateCartCount={updateCartCount} />}
