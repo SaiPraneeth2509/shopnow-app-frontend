@@ -6,10 +6,13 @@ import NotFound from "./components/ui/NotFound";
 import ProductDetails from "./components/product/ProductDetails";
 import Cart from "./components/cart/Cart";
 import Checkout from "./components/checkout/Checkout";
+import PaymentSuccess from "./components/checkout/PaymentSuccess";
+import PaymentCancel from "./components/checkout/PaymentCancel";
 import Login from "./components/auth/Login";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import Register from "./components/auth/Register";
 import Profile from "./components/profile/Profile";
+import OrderDetails from "./components/order/OrderDetails";
 import api from "./utils/api";
 import { AuthProvider } from "./components/context/AuthContext";
 
@@ -48,6 +51,12 @@ function App() {
             <Route path="product/:slug" element={<ProductDetails />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route
+              path="/payment-success"
+              element={<PaymentSuccess updateCartCount={updateCartCount} />}
+            />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
+            <Route path="/order/:orderId" element={<OrderDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </MainLayout>

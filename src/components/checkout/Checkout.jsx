@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../utils/api"; // Use the Axios instance
+import api from "../../utils/api";
+import Payment from "./Payment"; // Import Payment component
 
-const Checkout = () => {
+const Checkout = ({ updateCartCount }) => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Fetch cart items from the backend
   const fetchCartItems = async () => {
     const cartCode = localStorage.getItem("cart_code");
     if (!cartCode) {
@@ -27,19 +29,10 @@ const Checkout = () => {
     }
   };
 
+  // Calculate total price
   const totalPrice = cartItems
     .reduce((total, item) => total + item.product.price * item.quantity, 0)
     .toFixed(2);
-
-  const handlePayPalPayment = () => {
-    alert("Redirecting to PayPal...");
-  };
-
-  const handlePaymentSuccess = () => {
-    alert("Payment successful! Thank you for your purchase.");
-    localStorage.removeItem("cart_code");
-    navigate("/");
-  };
 
   useEffect(() => {
     fetchCartItems();
@@ -95,23 +88,7 @@ const Checkout = () => {
 
         {/* Payment Options */}
         <div className="col-md-4">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Payment Options</h5>
-              <button
-                className="btn btn-primary w-100 mb-3"
-                onClick={handlePayPalPayment}
-              >
-                Pay with PayPal
-              </button>
-              <button
-                className="btn btn-secondary w-100"
-                onClick={handlePaymentSuccess}
-              >
-                Pay with Credit Card
-              </button>
-            </div>
-          </div>
+          <Payment cartItems={cartItems} totalPrice={totalPrice} />
         </div>
       </div>
     </div>

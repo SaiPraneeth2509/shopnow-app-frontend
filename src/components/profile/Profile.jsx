@@ -148,11 +148,34 @@ const Profile = () => {
                   <strong>Order ID:</strong> {order.id}
                 </p>
                 <p>
-                  <strong>Date:</strong> {order.date}
+                  <strong>Date:</strong>{" "}
+                  {new Date(order.created_at).toLocaleDateString()}
                 </p>
                 <p>
-                  <strong>Total:</strong> ${order.total}
+                  <strong>Total:</strong> ${order.total_price}
                 </p>
+                <div>
+                  <strong>Products:</strong>
+                  {order.items && order.items.length > 0 ? (
+                    <ul>
+                      {order.items.map((item) => (
+                        <li key={item.product.id}>
+                          <p>
+                            <strong>Product:</strong> {item.product.name}
+                          </p>
+                          <p>
+                            <strong>Quantity:</strong> {item.quantity}
+                          </p>
+                          <p>
+                            <strong>Price:</strong> ${item.product.price}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No products found for this order.</p>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
