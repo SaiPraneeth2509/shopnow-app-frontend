@@ -60,15 +60,35 @@ const OrderDetails = () => {
                 <ul className="list-group">
                   {order.items.map((item) => (
                     <li key={item.product.id} className="list-group-item">
-                      <p>
-                        <strong>Product:</strong> {item.product.name}
-                      </p>
-                      <p>
-                        <strong>Quantity:</strong> {item.quantity}
-                      </p>
-                      <p>
-                        <strong>Price:</strong> ${item.product.price}
-                      </p>
+                      <div className="d-flex align-items-center">
+                        {/* Product Image */}
+                        <img
+                          src={`${api.defaults.baseURL}${item.product.image}`}
+                          alt={item.product.name}
+                          className="img-fluid rounded"
+                          style={{
+                            width: "100px",
+                            height: "100px",
+                            objectFit: "cover",
+                            marginRight: "20px",
+                          }}
+                          onError={(e) => {
+                            e.target.src = "/images/placeholder.png"; // Fallback image
+                            e.target.onerror = null; // Prevent infinite loop
+                          }}
+                        />
+                        <div>
+                          <p>
+                            <strong>Product:</strong> {item.product.name}
+                          </p>
+                          <p>
+                            <strong>Quantity:</strong> {item.quantity}
+                          </p>
+                          <p>
+                            <strong>Price:</strong> ${item.product.price}
+                          </p>
+                        </div>
+                      </div>
                     </li>
                   ))}
                 </ul>
