@@ -37,7 +37,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/shopnow-app-frontend">
         <MainLayout cartCount={cartCount} updateCartCount={updateCartCount}>
           <Routes>
             <Route path="/login" element={<Login />} />
